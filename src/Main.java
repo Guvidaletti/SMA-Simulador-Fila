@@ -4,6 +4,9 @@ public class Main {
 
         while (count > 0) {
             count--;
+            System.out.println(GeradorNumeros.nextRandom());
         }
+        
+
     }
 }
