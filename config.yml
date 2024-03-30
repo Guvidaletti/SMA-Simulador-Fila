@@ -1,0 +1,16 @@
+numeros: 1000
+
+sementes:
+  - 123456
+
+chegadas:
+  F1: 2.0
+
+filas:
+  F1:
+    servidores: 1
+    capacidade: 5
+    minChegada: 2.0
+    maxChegada: 5.0
+    minServico: 3.0
+    maxServico: 5.0
