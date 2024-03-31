@@ -15,6 +15,10 @@ public class GeradorNumeros {
     return (double) previous / M;
   }
 
+  public static synchronized double nextRandomNormalized(double min, double max) {
+    return (double) ((max - min) * nextRandom()) + min;
+  }
+
   public static void setSeed(long seed) {
     GeradorNumeros.seed = seed;
     previous = seed;

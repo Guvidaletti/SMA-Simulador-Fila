@@ -6,8 +6,8 @@ public class FilaConfig {
   @JsonProperty("servidores")
   private int servidores;
 
-  @JsonProperty("capacidade")
-  private int capacidade;
+  @JsonProperty(value = "capacidade", required = false)
+  private Integer capacidade;
 
   @JsonProperty("minChegada")
   private double minChegada;
@@ -29,11 +29,11 @@ public class FilaConfig {
     this.servidores = servidores;
   }
 
-  public int getCapacidade() {
+  public Integer getCapacidade() {
     return capacidade;
   }
 
-  public void setCapacidade(int capacidade) {
+  public void setCapacidade(Integer capacidade) {
     this.capacidade = capacidade;
   }
 

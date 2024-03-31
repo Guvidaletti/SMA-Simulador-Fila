@@ -11,6 +11,7 @@
 // G/G/2/5, chegadas entre 2...5, atendimento entre 3…5
 
 import config.ConfigLoader;
+import config.FilaConfig;
 import config.SimuladorConfig;
 
 public class Main {
@@ -27,12 +28,18 @@ public class Main {
 
     System.out.println("Configurações carregadas.");
 //    Fim da configuração
+    config.getFilas().forEach((id, value) -> {
+      Fila f = new Fila(id, value);
+      System.out.println(f);
+      System.out.println(f.temposToString());
+    });
 
-    long count = config.getNumeros();
-    while (count > 0) {
-      count--;
-      System.out.println(GeradorNumeros.nextRandom());
-    }
+
+//    long count = config.getNumeros();
+//    while (count > 0) {
+//      count--;
+//      System.out.println(GeradorNumeros.nextRandom());
+//    }
 
 //    Fila fila = new Fila(1);
 //    System.out.println(fila.estaVazia());
