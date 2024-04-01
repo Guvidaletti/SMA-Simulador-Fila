@@ -1,3 +1,5 @@
+package geradorNumeros;
+
 public class GeradorNumeros {
   //  m > 0
   //  0 < a < m

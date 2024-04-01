@@ -1,7 +1,8 @@
 import config.FilaConfig;
 import evento.Evento;
+import geradorNumeros.GeradorNumeros;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Fila {
 
@@ -9,16 +10,21 @@ public class Fila {
 
   private FilaConfig config;
 
+  private int tempoAtual = 0;
+
   private int estadoAtual = 0;
   private int perda = 0;
 
-  private double[] tempos;
+  private ArrayList<Double> tempos = new ArrayList<>();
+
+  private Escalonador escalonador = new Escalonador();
 
 
   public Fila(String id, FilaConfig config) {
-    if (config.getCapacidade() <= 0) {
+    if (config.getCapacidade() != null && config.getCapacidade() <= 0) {
       throw new IllegalArgumentException("A capacidade deve ser maior que zero");
     }
+
     if (config.getServidores() <= 0) {
       throw new IllegalArgumentException("O número de servidores deve ser maior que zero");
     }
@@ -26,7 +32,13 @@ public class Fila {
     this.id = id;
     this.config = config;
 
-    this.tempos = new double[config.getCapacidade() + 1];
+    if (config.getCapacidade() != null) {
+      this.tempos = new ArrayList<Double>(config.getCapacidade() + 1);
+
+      for (int i = 0; i < config.getCapacidade() + 1; i++) {
+        this.tempos.add(0.0);
+      }
+    }
   }
 
   public boolean estaVazia() {
@@ -34,52 +46,52 @@ public class Fila {
   }
 
   public boolean estaCheia() {
-    return config.getCapacidade() != null && estadoAtual == config.getCapacidade();
+    return config.getCapacidade() != null && estadoAtual >= config.getCapacidade();
   }
 
   public void chegada(Evento ev) {
 //    Acumula tempo (ev)
     if (this.config.getCapacidade() == null || this.estadoAtual < this.config.getCapacidade()) {
-//    Fila.in()
+      estadoAtual++;
+
       if (this.estadoAtual < this.config.getServidores()) {
-//      Escalonador.Add(TG + SAIDA(5,6))
+        escalonador.addEvento(ev, tempoAtual + GeradorNumeros.nextRandomNormalized(config.getMinServico(), config.getMaxServico()));
       }
     } else {
       this.perda++;
     }
-//    Escalonador.Add(TG + CHEGADA(1,3))
+    escalonador.addEvento(ev, tempoAtual + GeradorNumeros.nextRandomNormalized(config.getMinChegada(), config.getMaxChegada()));
   }
 
   public void saida(Evento ev) {
 //    Acumula tempo (ev)
-//    FIla.out()
+    estadoAtual--;
+
     if (this.estadoAtual > this.config.getServidores()) {
-//      Escalonador.Add(TG + SAIDA(5,6))
+      escalonador.addEvento(ev, tempoAtual + GeradorNumeros.nextRandomNormalized(config.getMinServico(), config.getMaxServico()));
     }
   }
 
   @Override
   public String toString() {
-    return "Fila '" + id + "' {" +
-        ",\n\tconfig=" + config +
-        ",\n\testadoAtual=" + estadoAtual +
-        ",\n\tperda=" + perda +
-        "\n}";
+    return "Fila '" + id + "' {" + "\n\tconfig=" + config + ",\n\testadoAtual=" + estadoAtual + ",\n\tperda=" + perda + "\n}";
   }
 
   public String temposToString() {
     StringBuilder sb = new StringBuilder();
     sb.append("=".repeat(30));
     sb.append("\nClientes\tTempo\n");
-    for (int i = 0; i < tempos.length; i++) {
+
+    for (int i = 0; i < tempos.size(); i++) {
       sb.append(i);
       sb.append("\t\t\t");
-      sb.append(tempos[i]);
+      sb.append(tempos.get(i));
       sb.append("ms\n");
     }
+
     sb.append("=".repeat(30));
     sb.append("\nTempo acumulado: ");
-    sb.append(Arrays.stream(tempos).sum());
+    sb.append(tempos.stream().mapToDouble(Double::doubleValue).sum());
     sb.append("ms\n");
     sb.append("=".repeat(30));
     return sb.toString();

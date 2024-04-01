@@ -11,12 +11,13 @@
 // G/G/2/5, chegadas entre 2...5, atendimento entre 3…5
 
 import config.ConfigLoader;
-import config.FilaConfig;
 import config.SimuladorConfig;
+import geradorNumeros.GeradorNumeros;
 
 public class Main {
 
   public static void main(String[] args) {
+    System.out.println("=".repeat(30));
 //    Configuração do simulador
     System.out.println("Carregando configurações...");
     SimuladorConfig config = ConfigLoader.load();
@@ -27,9 +28,11 @@ public class Main {
     GeradorNumeros.setSeed(config.getSementes()[0]);
 
     System.out.println("Configurações carregadas.");
+    System.out.println("=".repeat(30));
 //    Fim da configuração
     config.getFilas().forEach((id, value) -> {
       Fila f = new Fila(id, value);
+      System.out.println("Iniciando fila: ");
       System.out.println(f);
       System.out.println(f.temposToString());
     });
@@ -38,7 +41,7 @@ public class Main {
 //    long count = config.getNumeros();
 //    while (count > 0) {
 //      count--;
-//      System.out.println(GeradorNumeros.nextRandom());
+//      System.out.println(geradorNumeros.GeradorNumeros.nextRandom());
 //    }
 
 //    Fila fila = new Fila(1);
@@ -49,7 +52,7 @@ public class Main {
 //
 //    while (count > 0) {
 //      count--;
-//      System.out.println(GeradorNumeros.nextRandom());
+//      System.out.println(geradorNumeros.GeradorNumeros.nextRandom());
 //    }
 //
 //    long TempoFinal = System.currentTimeMillis();
