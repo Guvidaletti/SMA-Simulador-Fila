@@ -33,8 +33,15 @@ public class Main {
 //    Fim da configuração
 
     System.out.println("=".repeat(30));
+
+//      Para cada fila:
     config.getFilas().forEach((id, value) -> {
       Fila f = new Fila(id, value);
+      long nums = config.getNumeros();
+      while (nums > 0) {
+        nums--;
+        System.out.println(GeradorNumeros.nextRandom());
+      }
 
       System.out.println("Iniciando fila: " + id);
       System.out.println(f.temposToString());
