@@ -13,12 +13,12 @@ public class Fila {
   private int tempoAtual = 0;
 
   private int estadoAtual = 0;
+
   private int perda = 0;
 
   private ArrayList<Double> tempos = new ArrayList<>();
 
   private Escalonador escalonador = new Escalonador();
-
 
   public Fila(String id, FilaConfig config) {
     if (config.getCapacidade() != null && config.getCapacidade() <= 0) {
@@ -72,6 +72,11 @@ public class Fila {
     }
   }
 
+  public double getTempoAcumulado() {
+//    return tempos.stream().mapToDouble(Double::doubleValue).sum()
+    return tempos.stream().reduce(0.0, Double::sum);
+  }
+
   @Override
   public String toString() {
     return "Fila '" + id + "' {" + "\n\tconfig=" + config + ",\n\testadoAtual=" + estadoAtual + ",\n\tperda=" + perda + "\n}";
@@ -91,7 +96,7 @@ public class Fila {
 
     sb.append("=".repeat(30));
     sb.append("\nTempo acumulado: ");
-    sb.append(tempos.stream().mapToDouble(Double::doubleValue).sum());
+    sb.append(getTempoAcumulado());
     sb.append("ms\n");
     sb.append("=".repeat(30));
     return sb.toString();

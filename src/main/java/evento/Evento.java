@@ -11,8 +11,11 @@ public class Evento {
    */
   private double rand;
 
-  public Evento(TipoEvento tipo, double rand) {
+  public Evento(TipoEvento tipo) {
     this.tipo = tipo;
+  }
+
+  public void setRand(double rand) {
     this.rand = rand;
   }
 

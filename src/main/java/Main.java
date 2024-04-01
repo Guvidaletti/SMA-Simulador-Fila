@@ -21,8 +21,9 @@ public class Main {
 //    Configuração do simulador
     System.out.println("Carregando configurações...");
     SimuladorConfig config = ConfigLoader.load();
+
     if (config == null) {
-      throw new RuntimeException("Erro ao carregar configurações");
+      throw new RuntimeException("Erro ao carregar configurações.");
     }
 
     GeradorNumeros.setSeed(config.getSementes()[0]);
@@ -30,32 +31,14 @@ public class Main {
     System.out.println("Configurações carregadas.");
     System.out.println("=".repeat(30));
 //    Fim da configuração
+
+    System.out.println("=".repeat(30));
     config.getFilas().forEach((id, value) -> {
       Fila f = new Fila(id, value);
-      System.out.println("Iniciando fila: ");
-      System.out.println(f);
+
+      System.out.println("Iniciando fila: " + id);
       System.out.println(f.temposToString());
+      System.out.println("=".repeat(30));
     });
-
-
-//    long count = config.getNumeros();
-//    while (count > 0) {
-//      count--;
-//      System.out.println(geradorNumeros.GeradorNumeros.nextRandom());
-//    }
-
-//    Fila fila = new Fila(1);
-//    System.out.println(fila.estaVazia());
-//    System.out.println(fila.estaCheia());
-//
-//    int count = 5;
-//
-//    while (count > 0) {
-//      count--;
-//      System.out.println(geradorNumeros.GeradorNumeros.nextRandom());
-//    }
-//
-//    long TempoFinal = System.currentTimeMillis();
-//    System.out.println("Tempo de execução: " + (TempoFinal - TempoInicial) + "ms");
   }
 }
