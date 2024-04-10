@@ -17,14 +17,13 @@ import evento.TipoEvento;
 import geradorNumeros.GeradorNumeros;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
 
   public static void main(String[] args) {
     Escalonador e = new Escalonador();
-    Evento ev = new Evento(TipoEvento.CHEGADA, 0.0);
     System.out.println("=".repeat(30));
+
 //    Configuração do simulador
     System.out.println("Carregando configurações...");
     SimuladorConfig config = ConfigLoader.load();

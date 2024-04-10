@@ -58,8 +58,8 @@ public class Fila {
 
   private void acumulaTempo(double tempo) {
     if (tempos.size() >= estadoAtual) {
-      double tempoAtual = tempos.get(estadoAtual);
-      tempos.set(estadoAtual, tempoAtual + tempo);
+      double tempoIndexAtual = tempos.get(estadoAtual);
+      tempos.set(estadoAtual, tempoIndexAtual + tempo);
     }
   }
 
@@ -108,7 +108,7 @@ public class Fila {
 
   public String temposToString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("=".repeat(30));
+    sb.append("=".repeat(50));
     sb.append("\nClientes\t Tempo\t\t\t\t Probabilidade\n");
 
     double acc = getTempoAcumulado();
@@ -122,15 +122,15 @@ public class Fila {
       sb.append(" %\n");
     }
 
-    sb.append("=".repeat(30));
+    sb.append("=".repeat(50));
     sb.append("\nTempo acumulado: ");
     sb.append(decimalFormat.format(getTempoAcumulado()));
     sb.append("ms\n");
-    sb.append("=".repeat(30));
+    sb.append("=".repeat(50));
     sb.append("\nPerda: ");
     sb.append(perda);
     sb.append("\n");
-    sb.append("=".repeat(30));
+    sb.append("=".repeat(50));
     return sb.toString();
   }
 }
