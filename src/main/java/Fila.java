@@ -1,10 +1,15 @@
 import config.FilaConfig;
 import evento.Evento;
+import evento.TipoEvento;
 import geradorNumeros.GeradorNumeros;
 
+import javax.naming.LimitExceededException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Fila {
+
+  private final DecimalFormat decimalFormat = new DecimalFormat(" 0.####");
 
   private String id;
 
@@ -18,9 +23,11 @@ public class Fila {
 
   private ArrayList<Double> tempos = new ArrayList<>();
 
-  private Escalonador escalonador = new Escalonador();
+  private Escalonador escalonador;
 
-  public Fila(String id, FilaConfig config) {
+  public Fila(String id, FilaConfig config, Escalonador escalonador) {
+    this.escalonador = escalonador;
+
     if (config.getCapacidade() != null && config.getCapacidade() <= 0) {
       throw new IllegalArgumentException("A capacidade deve ser maior que zero");
     }
@@ -49,31 +56,48 @@ public class Fila {
     return config.getCapacidade() != null && estadoAtual >= config.getCapacidade();
   }
 
-  public void chegada(Evento ev) {
-//    Acumula tempo (ev)
-    if (this.config.getCapacidade() == null || this.estadoAtual < this.config.getCapacidade()) {
-      estadoAtual++;
-
-      if (this.estadoAtual < this.config.getServidores()) {
-        escalonador.addEvento(ev, tempoAtual + GeradorNumeros.nextRandomNormalized(config.getMinServico(), config.getMaxServico()));
-      }
-    } else {
-      this.perda++;
+  private void acumulaTempo(double tempo) {
+    if (tempos.size() >= estadoAtual) {
+      double tempoAtual = tempos.get(estadoAtual);
+      tempos.set(estadoAtual, tempoAtual + tempo);
     }
-    escalonador.addEvento(ev, tempoAtual + GeradorNumeros.nextRandomNormalized(config.getMinChegada(), config.getMaxChegada()));
+  }
+
+  public void chegada(Evento ev) {
+    acumulaTempo(ev.getTempo());
+    try {
+      if (this.config.getCapacidade() == null || estadoAtual < this.config.getCapacidade()) {
+        estadoAtual++;
+
+        if (estadoAtual <= this.config.getServidores()) {
+          double t = GeradorNumeros.nextRandomNormalized(config.getMinServico(), config.getMaxServico());
+          escalonador.addEvento(new Evento(TipoEvento.SAIDA, t), t);
+        }
+      } else {
+        this.perda++;
+      }
+      double t = GeradorNumeros.nextRandomNormalized(config.getMinChegada(), config.getMaxChegada());
+      escalonador.addEvento(new Evento(TipoEvento.CHEGADA, t), t);
+    } catch (LimitExceededException ex) {
+      System.err.println(ex.getMessage());
+    }
   }
 
   public void saida(Evento ev) {
-//    Acumula tempo (ev)
+    acumulaTempo(ev.getTempo());
     estadoAtual--;
 
-    if (this.estadoAtual > this.config.getServidores()) {
-      escalonador.addEvento(ev, tempoAtual + GeradorNumeros.nextRandomNormalized(config.getMinServico(), config.getMaxServico()));
+    try {
+      if (this.estadoAtual >= this.config.getServidores()) {
+        double t = GeradorNumeros.nextRandomNormalized(config.getMinServico(), config.getMaxServico());
+        escalonador.addEvento(new Evento(TipoEvento.SAIDA, t), t);
+      }
+    } catch (LimitExceededException ex) {
+      System.err.println(ex.getMessage());
     }
   }
 
   public double getTempoAcumulado() {
-//    return tempos.stream().mapToDouble(Double::doubleValue).sum()
     return tempos.stream().reduce(0.0, Double::sum);
   }
 
@@ -85,19 +109,27 @@ public class Fila {
   public String temposToString() {
     StringBuilder sb = new StringBuilder();
     sb.append("=".repeat(30));
-    sb.append("\nClientes\tTempo\n");
+    sb.append("\nClientes\t Tempo\t\t\t\t Probabilidade\n");
+
+    double acc = getTempoAcumulado();
 
     for (int i = 0; i < tempos.size(); i++) {
       sb.append(i);
       sb.append("\t\t\t");
-      sb.append(tempos.get(i));
-      sb.append("ms\n");
+      sb.append(decimalFormat.format(tempos.get(i)));
+      sb.append("ms\t\t");
+      sb.append(decimalFormat.format(tempos.get(i) / acc * 100));
+      sb.append(" %\n");
     }
 
     sb.append("=".repeat(30));
     sb.append("\nTempo acumulado: ");
-    sb.append(getTempoAcumulado());
+    sb.append(decimalFormat.format(getTempoAcumulado()));
     sb.append("ms\n");
+    sb.append("=".repeat(30));
+    sb.append("\nPerda: ");
+    sb.append(perda);
+    sb.append("\n");
     sb.append("=".repeat(30));
     return sb.toString();
   }

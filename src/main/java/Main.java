@@ -12,11 +12,18 @@
 
 import config.ConfigLoader;
 import config.SimuladorConfig;
+import evento.Evento;
+import evento.TipoEvento;
 import geradorNumeros.GeradorNumeros;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
   public static void main(String[] args) {
+    Escalonador e = new Escalonador();
+    Evento ev = new Evento(TipoEvento.CHEGADA, 0.0);
     System.out.println("=".repeat(30));
 //    Configuração do simulador
     System.out.println("Carregando configurações...");
@@ -27,25 +34,35 @@ public class Main {
     }
 
     GeradorNumeros.setSeed(config.getSementes()[0]);
-
+    GeradorNumeros.setLimite(config.getNumeros());
     System.out.println("Configurações carregadas.");
     System.out.println("=".repeat(30));
 //    Fim da configuração
 
-    System.out.println("=".repeat(30));
+    HashMap<String, Fila> filas = new HashMap<>();
 
-//      Para cada fila:
-    config.getFilas().forEach((id, value) -> {
-      Fila f = new Fila(id, value);
-      long nums = config.getNumeros();
-      while (nums > 0) {
-        nums--;
-        System.out.println(GeradorNumeros.nextRandom());
+//    Instanciando todas as filas
+    config.getFilas().forEach((id, fila) -> {
+      filas.put(id, new Fila(id, fila, e));
+    });
+
+//    Configurando todas as chegadas:
+    config.getChegadas().forEach((key, value) -> {
+      Fila f = filas.get(key);
+      e.addEvento(new Evento(TipoEvento.CHEGADA, value), value);
+      while (e.hasNext()) {
+        Evento prox = e.getProximoEvento();
+
+        if (prox.getTipo() == TipoEvento.CHEGADA) {
+          f.chegada(prox);
+        } else {
+          f.saida(prox);
+        }
       }
 
-      System.out.println("Iniciando fila: " + id);
+      System.out.println("Simulação da Fila " + key + " finalizada");
       System.out.println(f.temposToString());
-      System.out.println("=".repeat(30));
+
     });
   }
 }

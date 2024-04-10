@@ -7,23 +7,28 @@ public class Evento {
   private TipoEvento tipo;
 
   /**
-   * número randômico utilizado
+   * tempo do evento
    */
-  private double rand;
+  private double tempo;
 
   public Evento(TipoEvento tipo) {
     this.tipo = tipo;
   }
 
-  public void setRand(double rand) {
-    this.rand = rand;
+  public Evento(TipoEvento tipo, double tempo) {
+    this.tipo = tipo;
+    this.tempo = tempo;
+  }
+
+  public void setTempo(double tempo) {
+    this.tempo = tempo;
   }
 
   public TipoEvento getTipo() {
     return tipo;
   }
 
-  public double getRand() {
-    return rand;
+  public double getTempo() {
+    return tempo;
   }
 }

@@ -1,5 +1,7 @@
 package geradorNumeros;
 
+import javax.naming.LimitExceededException;
+
 public class GeradorNumeros {
   //  m > 0
   //  0 < a < m
@@ -11,18 +13,27 @@ public class GeradorNumeros {
   private static final long M = (long) Math.pow(2, 32);
 
   private static long previous = seed;
+  private static long limite;
 
-  public static synchronized double nextRandom() {
+  public static synchronized double nextRandom() throws LimitExceededException {
+    if (limite == 0) throw new LimitExceededException("Acabaram-se os números");
+    limite--;
     previous = ((a * previous) + c) % M;
     return (double) previous / M;
   }
 
-  public static synchronized double nextRandomNormalized(double min, double max) {
+  public static synchronized double nextRandomNormalized(double min, double max) throws LimitExceededException {
+    if (limite == 0) throw new LimitExceededException("Acabaram-se os números");
+    limite--;
     return (double) ((max - min) * nextRandom()) + min;
   }
 
   public static void setSeed(long seed) {
     GeradorNumeros.seed = seed;
     previous = seed;
+  }
+
+  public static void setLimite(long limite) {
+    GeradorNumeros.limite = limite;
   }
 }
