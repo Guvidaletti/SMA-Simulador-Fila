@@ -15,6 +15,7 @@ filas:
     maxChegada: 5.0
     minServico: 3.0
     maxServico: 5.0
+
   F2:
     servidores: 3
     capacidade: 5

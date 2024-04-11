@@ -16,6 +16,9 @@ public class Escalonador {
   }
 
   public Evento getProximoEvento() {
+    if (!hasNext()) {
+      return null;
+    }
     double tempo = eventosNaoOcorridos.firstKey();
     Evento evento = eventosNaoOcorridos.get(tempo);
     eventosNaoOcorridos.remove(tempo);
