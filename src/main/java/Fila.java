@@ -21,11 +21,15 @@ public class Fila {
 
   private int perda = 0;
 
-  private ArrayList<Double> tempos = new ArrayList<>();
+  private ArrayList<Double> tempos;
 
   private Escalonador escalonador;
 
   public Fila(String id, FilaConfig config, Escalonador escalonador) {
+    if (escalonador == null || config == null) {
+      throw new IllegalArgumentException("Escalonador e configuração não podem ser nulos.");
+    }
+
     this.escalonador = escalonador;
 
     if (config.getCapacidade() != null && config.getCapacidade() <= 0) {
@@ -39,12 +43,9 @@ public class Fila {
     this.id = id;
     this.config = config;
 
-    if (config.getCapacidade() != null) {
-      this.tempos = new ArrayList<Double>(config.getCapacidade() + 1);
-
-      for (int i = 0; i < config.getCapacidade() + 1; i++) {
-        this.tempos.add(0.0);
-      }
+    this.tempos = new ArrayList<>();
+    for (int i = 0; i < config.getCapacidade() + 1; i++) {
+      this.tempos.add(0.0);
     }
   }
 
@@ -57,7 +58,7 @@ public class Fila {
   }
 
   private void acumulaTempo(double tempo) {
-    if (tempos.size() >= estadoAtual) {
+    if (tempos.size() > estadoAtual) {
       double tempoIndexAtual = tempos.get(estadoAtual);
       tempos.set(estadoAtual, tempoIndexAtual + tempo);
     }
@@ -71,13 +72,13 @@ public class Fila {
 
         if (estadoAtual <= this.config.getServidores()) {
           double t = GeradorNumeros.nextRandomNormalized(config.getMinServico(), config.getMaxServico());
-          escalonador.addEvento(new Evento(TipoEvento.SAIDA, t), t);
+          escalonador.addEvento(new Evento(TipoEvento.SAIDA, id, t), t);
         }
       } else {
         this.perda++;
       }
       double t = GeradorNumeros.nextRandomNormalized(config.getMinChegada(), config.getMaxChegada());
-      escalonador.addEvento(new Evento(TipoEvento.CHEGADA, t), t);
+      escalonador.addEvento(new Evento(TipoEvento.CHEGADA, id, t), t);
     } catch (LimitExceededException ex) {
       System.err.println(ex.getMessage());
     }
@@ -90,7 +91,7 @@ public class Fila {
     try {
       if (this.estadoAtual >= this.config.getServidores()) {
         double t = GeradorNumeros.nextRandomNormalized(config.getMinServico(), config.getMaxServico());
-        escalonador.addEvento(new Evento(TipoEvento.SAIDA, t), t);
+        escalonador.addEvento(new Evento(TipoEvento.SAIDA, id, t), t);
       }
     } catch (LimitExceededException ex) {
       System.err.println(ex.getMessage());
@@ -103,7 +104,8 @@ public class Fila {
 
   @Override
   public String toString() {
-    return "Fila '" + id + "' {" + "\n\tconfig=" + config + ",\n\testadoAtual=" + estadoAtual + ",\n\tperda=" + perda + "\n}";
+    return "Fila '" + id + "' {" + "\n\tconfig=" + config + ",\n\testadoAtual=" + estadoAtual + ",\n\tperda=" + perda
+        + "\n}";
   }
 
   public String temposToString() {
@@ -118,8 +120,12 @@ public class Fila {
       sb.append("\t\t\t");
       sb.append(decimalFormat.format(tempos.get(i)));
       sb.append("ms\t\t");
-      sb.append(decimalFormat.format(tempos.get(i) / acc * 100));
-      sb.append(" %\n");
+      if (acc != 0) {
+        sb.append(decimalFormat.format(tempos.get(i) / acc * 100));
+        sb.append(" %\n");
+      } else {
+        sb.append("0 %\n");
+      }
     }
 
     sb.append("=".repeat(50));

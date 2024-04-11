@@ -24,7 +24,7 @@ public class Main {
     Escalonador e = new Escalonador();
     System.out.println("=".repeat(30));
 
-//    Configuração do simulador
+    // Configuração do simulador
     System.out.println("Carregando configurações...");
     SimuladorConfig config = ConfigLoader.load();
 
@@ -36,32 +36,41 @@ public class Main {
     GeradorNumeros.setLimite(config.getNumeros());
     System.out.println("Configurações carregadas.");
     System.out.println("=".repeat(30));
-//    Fim da configuração
+    // Fim da configuração
 
     HashMap<String, Fila> filas = new HashMap<>();
 
-//    Instanciando todas as filas
-    config.getFilas().forEach((id, fila) -> {
-      filas.put(id, new Fila(id, fila, e));
+    // Instanciando todas as filas
+    config.getFilas().forEach((id, filaConfig) -> {
+      filas.put(id, new Fila(id, filaConfig, e));
     });
 
-//    Configurando todas as chegadas:
-    config.getChegadas().forEach((key, value) -> {
-      Fila f = filas.get(key);
-      e.addEvento(new Evento(TipoEvento.CHEGADA, value), value);
-      while (e.hasNext()) {
-        Evento prox = e.getProximoEvento();
-
-        if (prox.getTipo() == TipoEvento.CHEGADA) {
-          f.chegada(prox);
-        } else {
-          f.saida(prox);
-        }
+    // Configurando todas as chegadas:
+    config.getChegadas().forEach((filaId, tempoChegada) -> {
+      Fila f = filas.get(filaId);
+      if (f != null) {
+        e.addEvento(new Evento(TipoEvento.CHEGADA, filaId, tempoChegada), tempoChegada);
+      } else {
+        System.err.println("Fila com ID '" + filaId + "' não encontrada.");
       }
+    });
 
-      System.out.println("Simulação da Fila " + key + " finalizada");
-      System.out.println(f.temposToString());
+    while (e.hasNext()) {
+      Evento prox = e.getProximoEvento();
+      Fila f = filas.get(prox.getIdFila());
 
+      if (prox.getTipo() == TipoEvento.CHEGADA) {
+        f.chegada(prox);
+      } else {
+        f.saida(prox);
+      }
+    }
+
+    System.out.println("Resultados da simulação:");
+    filas.forEach((id, fila) -> {
+      System.out.println("=".repeat(30));
+      System.out.println("Fila: " + id);
+      System.out.println(fila.temposToString());
     });
   }
 }

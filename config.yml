@@ -5,12 +5,21 @@ sementes:
 
 chegadas:
   F1: 2.0
+  F2: 1.0
 
 filas:
   F1:
     servidores: 1
     capacidade: 5
     minChegada: 2.0
+    maxChegada: 5.0
+    minServico: 3.0
+    maxServico: 5.0
+
+  F2:
+    servidores: 3
+    capacidade: 5
+    minChegada: 1.0
     maxChegada: 5.0
     minServico: 3.0
     maxServico: 5.0
