@@ -11,13 +11,16 @@ public class Evento {
    */
   private double tempo;
 
+  private String idFila;
+
   public Evento(TipoEvento tipo) {
     this.tipo = tipo;
   }
 
-  public Evento(TipoEvento tipo, double tempo) {
+  public Evento(TipoEvento tipo, String idFila, double tempo) {
     this.tipo = tipo;
     this.tempo = tempo;
+    this.idFila = idFila;
   }
 
   public void setTempo(double tempo) {
@@ -30,5 +33,9 @@ public class Evento {
 
   public double getTempo() {
     return tempo;
+  }
+
+  public String getIdFila() {
+    return idFila;
   }
 }
