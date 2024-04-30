@@ -17,6 +17,11 @@ public class SimuladorConfig {
   @JsonProperty("filas")
   private Map<String, FilaConfig> filas;
 
+  @JsonProperty("rede")
+  private RedeConfig[] rede;
+
+  // Getters and Setters
+
   public long getNumeros() {
     return numeros;
   }
@@ -49,6 +54,16 @@ public class SimuladorConfig {
     this.filas = filas;
   }
 
+  public RedeConfig[] getRede() {
+    return rede;
+  }
+
+  public void setRede(RedeConfig[] rede) {
+    this.rede = rede;
+  }
+
+  // Overrides
+
   @Override
   public String toString() {
     return "SimuladorConfig = {" +
@@ -56,6 +71,7 @@ public class SimuladorConfig {
         ",\n\tsementes=" + sementes +
         ",\n\tchegadas=" + chegadas +
         ",\n\tfilas=" + filas +
-        '}';
+        ",\n\trede=" + rede +
+        "\n}";
   }
 }

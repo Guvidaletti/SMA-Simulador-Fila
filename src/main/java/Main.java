@@ -11,10 +11,13 @@
 // G/G/2/5, chegadas entre 2...5, atendimento entre 3…5
 
 import config.ConfigLoader;
+import config.RedeConfig;
 import config.SimuladorConfig;
 import evento.Evento;
 import evento.TipoEvento;
 import geradorNumeros.GeradorNumeros;
+import simulador.Escalonador;
+import simulador.Fila;
 
 import java.util.HashMap;
 
@@ -45,7 +48,13 @@ public class Main {
       filas.put(id, new Fila(id, filaConfig, e));
     });
 
-    // Configurando todas as chegadas:
+    // Configurando a rede:
+    for (RedeConfig c : config.getRede()) {
+      System.out.println(c.toString());
+      filas.get(c.getOrigem()).addConexaoFila(filas.get(c.getDestino()), c.getProbabilidade());
+    }
+
+//    Configurando todas as chegadas:
     config.getChegadas().forEach((filaId, tempoChegada) -> {
       Fila f = filas.get(filaId);
       if (f != null) {
@@ -55,16 +64,16 @@ public class Main {
       }
     });
 
+//    Iniciando a simulação:
     while (e.hasNext()) {
       Evento prox = e.getProximoEvento();
-      Fila f = filas.get(prox.getIdFila());
+      Fila f = prox.getFila();
 
-      if (prox.getTipo() == TipoEvento.CHEGADA) {
-        f.chegada(prox);
-      } else {
-        f.saida(prox);
+      switch (prox.getTipo()) {
+        case CHEGADA -> f.chegada(prox);
+        case SAIDA -> f.saida(prox);
+        case PASSAGEM -> f.passagem(prox);
       }
-    }
 
     System.out.println("Resultados da simulação:");
     filas.forEach((id, fila) -> {

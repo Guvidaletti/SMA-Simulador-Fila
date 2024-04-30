@@ -1,3 +1,5 @@
+package simulador;
+
 import evento.Evento;
 
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public class Escalonador {
 
   @Override
   public String toString() {
-    return "Escalonador{" +
+    return "simulador.Escalonador{" +
         "\n\teventosNaoOcorridos=" + eventosNaoOcorridos +
         ",\n\teventosJaOcorridos=" + eventosJaOcorridos +
         "\n}";

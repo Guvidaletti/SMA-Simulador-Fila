@@ -1,11 +1,11 @@
-numeros: 100000
+#numeros: 100000
+numeros: 1000
 
 sementes:
   - 123456
 
 chegadas:
   F1: 2.0
-  F2: 1.0
 
 filas:
   F1:
@@ -15,7 +15,6 @@ filas:
     maxChegada: 5.0
     minServico: 3.0
     maxServico: 5.0
-
   F2:
     servidores: 3
     capacidade: 5
@@ -23,3 +22,9 @@ filas:
     maxChegada: 5.0
     minServico: 3.0
     maxServico: 5.0
+
+
+rede:
+  -  origem: F1
+     destino: F2
+     probabilidade: 1.0

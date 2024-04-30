@@ -1,5 +1,5 @@
 package evento;
 
 public enum TipoEvento {
-  CHEGADA, SAIDA
+  CHEGADA, SAIDA, PASSAGEM
 }

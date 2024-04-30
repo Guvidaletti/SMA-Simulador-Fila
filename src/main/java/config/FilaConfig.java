@@ -2,6 +2,8 @@ package config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+
 public class FilaConfig {
   @JsonProperty("servidores")
   private int servidores;

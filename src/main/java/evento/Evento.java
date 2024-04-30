@@ -1,5 +1,7 @@
 package evento;
 
+import simulador.Fila;
+
 public class Evento {
   /**
    * Tipo do evento
@@ -11,16 +13,16 @@ public class Evento {
    */
   private double tempo;
 
-  private String idFila;
+  private Fila fila;
 
-  public Evento(TipoEvento tipo) {
-    this.tipo = tipo;
-  }
-
-  public Evento(TipoEvento tipo, String idFila, double tempo) {
+  public Evento(TipoEvento tipo, double tempo, Fila fila) {
     this.tipo = tipo;
     this.tempo = tempo;
-    this.idFila = idFila;
+    this.fila = fila;
+  }
+
+  public Fila getFila() {
+    return fila;
   }
 
   public void setTempo(double tempo) {
