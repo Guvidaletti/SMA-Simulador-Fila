@@ -30,7 +30,9 @@ public class Fila {
   private ArrayList<ConexaoFila> conexoes = new ArrayList<>();
 
   public Fila(String id, FilaConfig config, Escalonador escalonador) {
-    this.escalonador = escalonador;
+    if (escalonador == null || config == null) {
+      throw new IllegalArgumentException("Escalonador e configuração não podem ser nulos.");
+    }
 
     if (config.getCapacidade() != null && config.getCapacidade() <= 0) {
       throw new IllegalArgumentException("A capacidade deve ser maior que zero");
@@ -40,6 +42,7 @@ public class Fila {
       throw new IllegalArgumentException("O número de servidores deve ser maior que zero");
     }
 
+    this.escalonador = escalonador;
     this.id = id;
     this.config = config;
 
@@ -148,8 +151,12 @@ public class Fila {
       sb.append("\t\t\t");
       sb.append(decimalFormat.format(tempos.get(i)));
       sb.append("ms\t\t");
-      sb.append(decimalFormat.format(tempos.get(i) / acc * 100));
-      sb.append(" %\n");
+      if (acc != 0) {
+        sb.append(decimalFormat.format(tempos.get(i) / acc * 100));
+        sb.append(" %\n");
+      } else {
+        sb.append("0 %\n");
+      }
     }
 
     sb.append("=".repeat(50));

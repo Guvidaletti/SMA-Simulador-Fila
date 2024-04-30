@@ -25,7 +25,7 @@ public class Main {
 
   public static void main(String[] args) {
     Escalonador e = new Escalonador();
-    System.out.println("=".repeat(30));
+    System.out.println("=".repeat(50));
 
     // Configuração do simulador
     System.out.println("Carregando configurações...");
@@ -38,7 +38,7 @@ public class Main {
     GeradorNumeros.setSeed(config.getSementes()[0]);
     GeradorNumeros.setLimite(config.getNumeros());
     System.out.println("Configurações carregadas.");
-    System.out.println("=".repeat(30));
+    System.out.println("=".repeat(50));
     // Fim da configuração
 
     HashMap<String, Fila> filas = new HashMap<>();
@@ -58,7 +58,7 @@ public class Main {
     config.getChegadas().forEach((filaId, tempoChegada) -> {
       Fila f = filas.get(filaId);
       if (f != null) {
-        e.addEvento(new Evento(TipoEvento.CHEGADA, filaId, tempoChegada), tempoChegada);
+        e.addEvento(new Evento(TipoEvento.CHEGADA, tempoChegada, f), tempoChegada);
       } else {
         System.err.println("Fila com ID '" + filaId + "' não encontrada.");
       }
@@ -74,10 +74,11 @@ public class Main {
         case SAIDA -> f.saida(prox);
         case PASSAGEM -> f.passagem(prox);
       }
+    }
 
     System.out.println("Resultados da simulação:");
     filas.forEach((id, fila) -> {
-      System.out.println("=".repeat(30));
+      System.out.println("=".repeat(50));
       System.out.println("Fila: " + id);
       System.out.println(fila.temposToString());
     });

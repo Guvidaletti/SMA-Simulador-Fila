@@ -36,8 +36,4 @@ public class Evento {
   public double getTempo() {
     return tempo;
   }
-
-  public String getIdFila() {
-    return idFila;
-  }
 }
