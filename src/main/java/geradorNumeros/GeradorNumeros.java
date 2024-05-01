@@ -28,6 +28,10 @@ public class GeradorNumeros {
     return (double) ((max - min) * nextRandom()) + min;
   }
 
+  public static synchronized double nextRandomUntraced(double min, double max) {
+    return (double) ((max - min) * Math.random()) + min;
+  }
+
   public static void setSeed(long seed) {
     GeradorNumeros.seed = seed;
     previous = seed;

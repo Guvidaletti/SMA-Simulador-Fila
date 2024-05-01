@@ -13,16 +13,23 @@ public class Evento {
    */
   private double tempo;
 
-  private Fila fila;
+  private Fila origem;
 
-  public Evento(TipoEvento tipo, double tempo, Fila fila) {
+  private Fila destino;
+
+  public Evento(TipoEvento tipo, double tempo, Fila origem, Fila destino) {
     this.tipo = tipo;
     this.tempo = tempo;
-    this.fila = fila;
+    this.origem = origem;
+    this.destino = destino;
   }
 
-  public Fila getFila() {
-    return fila;
+  public Fila getOrigem() {
+    return origem;
+  }
+
+  public Fila getDestino() {
+    return destino;
   }
 
   public void setTempo(double tempo) {

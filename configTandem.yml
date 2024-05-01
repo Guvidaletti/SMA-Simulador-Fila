@@ -14,15 +14,15 @@ filas:
     maxChegada: 5.0
     minServico: 3.0
     maxServico: 5.0
-#  F2:
-#    servidores: 2
-#    capacidade: 3
+  F2:
+    servidores: 2
+    capacidade: 3
 #    minChegada: 2.0
 #    maxChegada: 5.0
-#    minServico: 3.0
-#    maxServico: 5.0
+    minServico: 3.0
+    maxServico: 5.0
 
-#rede:
-#  -  origem: F1
-#     destino: F2
-#     probabilidade: 1.0
+rede:
+  -  origem: F1
+     destino: F2
+     probabilidade: 1.0

@@ -12,7 +12,7 @@ public class ConfigLoader {
 
     try {
       // Carregue o arquivo YAML para um mapa
-      SimuladorConfig yamlMap = objectMapper.readValue(new File("config.yml"), SimuladorConfig.class);
+      SimuladorConfig yamlMap = objectMapper.readValue(new File("configTandem.yml"), SimuladorConfig.class);
 
       return yamlMap;
     } catch (IOException e) {

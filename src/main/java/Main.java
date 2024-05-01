@@ -14,17 +14,19 @@ import config.ConfigLoader;
 import config.RedeConfig;
 import config.SimuladorConfig;
 import evento.Evento;
+import evento.Operacoes;
 import evento.TipoEvento;
 import geradorNumeros.GeradorNumeros;
 import simulador.Escalonador;
 import simulador.Fila;
+import simulador.Tempo;
 
 import java.util.HashMap;
 
 public class Main {
 
   public static void main(String[] args) {
-    Escalonador e = new Escalonador();
+    Escalonador escalonador = new Escalonador();
     System.out.println("=".repeat(50));
 
     // Configuração do simulador
@@ -39,48 +41,57 @@ public class Main {
     GeradorNumeros.setLimite(config.getNumeros());
     System.out.println("Configurações carregadas.");
     System.out.println("=".repeat(50));
-    // Fim da configuração
 
     HashMap<String, Fila> filas = new HashMap<>();
 
     // Instanciando todas as filas
     config.getFilas().forEach((id, filaConfig) -> {
-      filas.put(id, new Fila(id, filaConfig, e));
+      filas.put(id, new Fila(id, filaConfig));
     });
 
     // Configurando a rede:
-    for (RedeConfig c : config.getRede()) {
-      System.out.println(c.toString());
-      filas.get(c.getOrigem()).addConexaoFila(filas.get(c.getDestino()), c.getProbabilidade());
+    if (config.getRede() != null) {
+      for (RedeConfig c : config.getRede()) {
+        filas.get(c.getOrigem()).addConexaoFila(filas.get(c.getDestino()), c.getProbabilidade());
+      }
     }
 
 //    Configurando todas as chegadas:
     config.getChegadas().forEach((filaId, tempoChegada) -> {
       Fila f = filas.get(filaId);
       if (f != null) {
-        e.addEvento(new Evento(TipoEvento.CHEGADA, tempoChegada, f), tempoChegada);
+        escalonador.addEvento(new Evento(TipoEvento.CHEGADA, tempoChegada, null, f), tempoChegada);
       } else {
         System.err.println("Fila com ID '" + filaId + "' não encontrada.");
       }
     });
 
 //    Iniciando a simulação:
-    while (e.hasNext()) {
-      Evento prox = e.getProximoEvento();
-      Fila f = prox.getFila();
+    while (escalonador.hasNext()) {
+      Evento prox = escalonador.getProximoEvento();
+
 
       switch (prox.getTipo()) {
-        case CHEGADA -> f.chegada(prox);
-        case SAIDA -> f.saida(prox);
-        case PASSAGEM -> f.passagem(prox);
+        case CHEGADA -> Operacoes.chegada(prox, escalonador);
+        case SAIDA -> Operacoes.saida(prox, escalonador);
+        case PASSAGEM -> Operacoes.passagem(prox, escalonador);
       }
     }
 
     System.out.println("Resultados da simulação:");
+
     filas.forEach((id, fila) -> {
       System.out.println("=".repeat(50));
-      System.out.println("Fila: " + id);
-      System.out.println(fila.temposToString());
+      System.out.println("Fila: " + id + " (G/G/" + fila.getConfig().getServidores() + "/" + fila.getConfig().getCapacidade() + ")");
+      System.out.println("Chegadas: " + fila.getConfig().getMinChegada() + "..." + fila.getConfig().getMaxChegada());
+      System.out.println("Atendimento: " + fila.getConfig().getMinServico() + "..." + fila.getConfig().getMaxServico());
+      System.out.print(Tempo.temposToString(id));
+      System.out.println("=".repeat(50));
+      System.out.println("Perda: " + fila.getPerda() + " clientes");
     });
+
+    System.out.println("=".repeat(50));
+    System.out.println("Tempo total de simulação: " + Tempo.getTempoAcumuladoToString() + "ms");
+    System.out.println("=".repeat(50));
   }
 }

@@ -1,0 +1,48 @@
+numeros: 100000
+
+sementes:
+  - 123456
+
+chegadas:
+  F1: 2.0
+
+filas:
+  F1:
+    servidores: 1
+#    capacidade: 5
+    minChegada: 2.0
+    maxChegada: 4.0
+    minServico: 1.0
+    maxServico: 2.0
+  F2:
+    servidores: 2
+    capacidade: 5
+#    minChegada: 2.0
+#    maxChegada: 5.0
+    minServico: 4.0
+    maxServico: 8.0
+  F3:
+    servidores: 2
+    capacidade: 10
+#    minChegada: 2.0
+#    maxChegada: 5.0
+    minServico: 5.0
+    maxServico: 15.0
+
+rede:
+  -  origem: F1
+     destino: F2
+     probabilidade: 0.8
+  - origem: F1
+    destino: F3
+    probabilidade: 0.2
+  - origem: F2
+    destino: F1
+    probabilidade: 0.3
+  - origem: F2
+    destino: F2
+    probabilidade: 0.5
+  - origem: F3
+    destino: F3
+    probabilidade: 0.7
+

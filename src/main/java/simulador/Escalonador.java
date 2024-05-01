@@ -2,12 +2,12 @@ package simulador;
 
 import evento.Evento;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class Escalonador {
   private TreeMap<Double, Evento> eventosNaoOcorridos = new TreeMap<>();
-  private HashMap<Double, Evento> eventosJaOcorridos = new HashMap<>();
+  private ArrayList<Evento> eventosJaOcorridos = new ArrayList<>();
 
   public void addEvento(Evento evento, double tempo) {
     eventosNaoOcorridos.put(tempo, evento);
@@ -24,7 +24,7 @@ public class Escalonador {
     double tempo = eventosNaoOcorridos.firstKey();
     Evento evento = eventosNaoOcorridos.get(tempo);
     eventosNaoOcorridos.remove(tempo);
-    eventosJaOcorridos.put(tempo, evento);
+    eventosJaOcorridos.add(evento);
     return evento;
   }
 
