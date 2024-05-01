@@ -31,7 +31,7 @@ public class Main {
 
     // Configuração do simulador
     System.out.println("Carregando configurações...");
-    SimuladorConfig config = ConfigLoader.load();
+    SimuladorConfig config = ConfigLoader.load(args[0]);
 
     if (config == null) {
       throw new RuntimeException("Erro ao carregar configurações.");
