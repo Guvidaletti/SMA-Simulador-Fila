@@ -30,9 +30,6 @@ public class Escalonador {
 
   @Override
   public String toString() {
-    return "simulador.Escalonador{" +
-        "\n\teventosNaoOcorridos=" + eventosNaoOcorridos +
-        ",\n\teventosJaOcorridos=" + eventosJaOcorridos +
-        "\n}";
+    return "simulador.Escalonador{" + "\n\teventosNaoOcorridos=" + eventosNaoOcorridos + ",\n\teventosJaOcorridos=" + eventosJaOcorridos + "\n}";
   }
 }

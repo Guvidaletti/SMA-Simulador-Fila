@@ -21,6 +21,7 @@ import simulador.Escalonador;
 import simulador.Fila;
 import simulador.Tempo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main {
@@ -70,11 +71,11 @@ public class Main {
     while (escalonador.hasNext()) {
       Evento prox = escalonador.getProximoEvento();
 
-
+      ArrayList filasArray = new ArrayList<>(filas.values());
       switch (prox.getTipo()) {
-        case CHEGADA -> Operacoes.chegada(prox, escalonador);
-        case SAIDA -> Operacoes.saida(prox, escalonador);
-        case PASSAGEM -> Operacoes.passagem(prox, escalonador);
+        case CHEGADA -> Operacoes.chegada(prox, escalonador, filasArray);
+        case SAIDA -> Operacoes.saida(prox, escalonador, filasArray);
+        case PASSAGEM -> Operacoes.passagem(prox, escalonador, filasArray);
       }
     }
 

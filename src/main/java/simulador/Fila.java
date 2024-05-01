@@ -3,6 +3,7 @@ package simulador;
 import config.FilaConfig;
 import geradorNumeros.GeradorNumeros;
 
+import javax.naming.LimitExceededException;
 import java.util.TreeMap;
 
 public class Fila {
@@ -34,13 +35,13 @@ public class Fila {
     conexoes.put(probabilidade, new ConexaoFila(fila, probabilidade));
   }
 
-  public Fila getConexaoAleatoria() {
+  public Fila getConexaoAleatoria() throws LimitExceededException {
     double rand = GeradorNumeros.nextRandomUntraced(0, 1);
     double soma = 0.0;
 
     for (ConexaoFila conexao : conexoes.values()) {
       soma += conexao.getProbabilidade();
-      if (rand <= soma) {
+      if (rand < soma) {
         return conexao.getDestino();
       }
     }

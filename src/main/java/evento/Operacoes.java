@@ -7,15 +7,16 @@ import simulador.Fila;
 import simulador.Tempo;
 
 import javax.naming.LimitExceededException;
+import java.util.ArrayList;
 
 public class Operacoes {
 
-  public static void chegada(Evento ev, Escalonador escalonador) {
+  public static void chegada(Evento ev, Escalonador escalonador, ArrayList<Fila> filas) {
     try {
       Fila f = ev.getDestino();
       FilaConfig filaConfig = f.getConfig();
 
-      double tempoAcumulado = Tempo.acumulaTempo(f.getId(), f.getEstadoAtual(), ev.getTempo());
+      double tempoAcumulado = Tempo.acumulaTempo(f.getId(), ev.getTempo(), filas);
 
       if (f.getConfig().getCapacidade() == null || f.getEstadoAtual() < f.getConfig().getCapacidade()) {
         f.entra();
@@ -37,19 +38,17 @@ public class Operacoes {
       double tempoQueAconteceOEvento = tempoAcumulado + duracao;
 
       escalonador.addEvento(new Evento(TipoEvento.CHEGADA, tempoQueAconteceOEvento, null, f), tempoQueAconteceOEvento);
-
     } catch (LimitExceededException ex) {
 //      System.err.println(ex.getMessage());
-
     }
   }
 
-  public static void saida(Evento ev, Escalonador escalonador) {
+  public static void saida(Evento ev, Escalonador escalonador, ArrayList<Fila> filas) {
     try {
       Fila f = ev.getOrigem();
       FilaConfig filaConfig = f.getConfig();
 
-      double tempoAcumulado = Tempo.acumulaTempo(f.getId(), f.getEstadoAtual(), ev.getTempo());
+      double tempoAcumulado = Tempo.acumulaTempo(f.getId(), ev.getTempo(), filas);
       f.sai();
 
       if (f.getEstadoAtual() >= filaConfig.getServidores()) {
@@ -65,7 +64,7 @@ public class Operacoes {
     }
   }
 
-  public static void passagem(Evento ev, Escalonador escalonador) {
+  public static void passagem(Evento ev, Escalonador escalonador, ArrayList<Fila> filas) {
     try {
       Fila origem = ev.getOrigem();
       FilaConfig origemConfig = origem.getConfig();
@@ -73,7 +72,7 @@ public class Operacoes {
       Fila destino = ev.getDestino();
       FilaConfig destinoConfig = destino.getConfig();
 
-      double tempoAcumulado = Tempo.acumulaTempo(origem.getId(), origem.getEstadoAtual(), ev.getTempo());
+      double tempoAcumulado = Tempo.acumulaTempo(origem.getId(), ev.getTempo(), filas);
       origem.sai();
 
       if (origem.getEstadoAtual() >= origemConfig.getServidores()) {
@@ -88,7 +87,6 @@ public class Operacoes {
 
       if (destinoConfig.getCapacidade() == null || destino.getEstadoAtual() < destinoConfig.getCapacidade()) {
         destino.entra();
-//        TEM UM ERRO NO ALGORITMO! (acho que falta o acúmulo)
 
         if (destino.getEstadoAtual() <= destinoConfig.getServidores()) {
           double duracao = GeradorNumeros.nextRandomNormalized(destinoConfig.getMinServico(), destinoConfig.getMaxServico());
