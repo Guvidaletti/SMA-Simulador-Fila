@@ -7,12 +7,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class ConfigLoader {
-  public static SimuladorConfig load(String name) {
+  public static SimuladorConfig load(String file) {
     ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
     try {
       // Carregue o arquivo YAML para um mapa
-      SimuladorConfig yamlMap = objectMapper.readValue(new File(name + ".yml"), SimuladorConfig.class);
+      SimuladorConfig yamlMap = objectMapper.readValue(new File(file), SimuladorConfig.class);
 
       return yamlMap;
     } catch (IOException e) {
