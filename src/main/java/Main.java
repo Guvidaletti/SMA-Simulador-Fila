@@ -92,7 +92,7 @@ public class Main {
     });
 
     System.out.println("=".repeat(50));
-    System.out.println("Tempo total de simulação: " + Tempo.getTempoAcumuladoToString() + "ms");
+    System.out.println("Tempo total de simulação: " + Tempo.getTempoAcumuladoToString());
     System.out.println("=".repeat(50));
   }
 }

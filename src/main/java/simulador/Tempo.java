@@ -62,7 +62,7 @@ public class Tempo {
       sb.append(i);
       sb.append("\t\t\t");
       sb.append(decimalFormat.format(filaTempos.get(i)));
-      sb.append("ms\t\t");
+      sb.append("\t\t");
       if (tempoAcumulado != 0) {
         sb.append(decimalFormat.format(filaTempos.get(i) / tempoAcumulado * 100));
         sb.append(" %\n");

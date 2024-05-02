@@ -41,6 +41,7 @@ public class Fila {
 
     for (ConexaoFila conexao : conexoes.values()) {
       soma += conexao.getProbabilidade();
+
       if (rand < soma) {
         return conexao.getDestino();
       }

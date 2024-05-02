@@ -40,9 +40,9 @@ rede:
     destino: F1
     probabilidade: 0.3
   - origem: F2
-    destino: F2
+    destino: F3
     probabilidade: 0.5
   - origem: F3
-    destino: F3
+    destino: F2
     probabilidade: 0.7
 
