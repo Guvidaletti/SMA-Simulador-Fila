@@ -10,6 +10,7 @@
 // G/G/1/5, chegadas entre 2...5, atendimento entre 3...5
 // G/G/2/5, chegadas entre 2...5, atendimento entre 3…5
 
+import analise.Calculos;
 import config.ConfigLoader;
 import config.RedeConfig;
 import config.SimuladorConfig;
@@ -23,11 +24,11 @@ import simulador.Tempo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Main {
 
   public static void main(String[] args) {
-    Escalonador escalonador = new Escalonador();
     System.out.println("=".repeat(50));
 
     // Configuração do simulador
@@ -39,7 +40,6 @@ public class Main {
     }
 
     GeradorNumeros.setSeed(config.getSementes()[0]);
-    GeradorNumeros.setLimite(config.getNumeros());
     System.out.println("Configurações carregadas.");
     System.out.println("=".repeat(50));
 
@@ -61,21 +61,23 @@ public class Main {
     config.getChegadas().forEach((filaId, tempoChegada) -> {
       Fila f = filas.get(filaId);
       if (f != null) {
-        escalonador.addEvento(new Evento(TipoEvento.CHEGADA, tempoChegada, null, f), tempoChegada);
+        Escalonador.addEvento(new Evento(TipoEvento.CHEGADA, tempoChegada, null, f), tempoChegada);
       } else {
         System.err.println("Fila com ID '" + filaId + "' não encontrada.");
       }
     });
 
 //    Iniciando a simulação:
-    while (escalonador.hasNext()) {
-      Evento prox = escalonador.getProximoEvento();
+    long limite = config.getNumeros();
+    while (limite > 0 && Escalonador.hasNext()) {
+      Evento prox = Escalonador.getProximoEvento();
+      limite--;
 
       ArrayList filasArray = new ArrayList<>(filas.values());
       switch (prox.getTipo()) {
-        case CHEGADA -> Operacoes.chegada(prox, escalonador, filasArray);
-        case SAIDA -> Operacoes.saida(prox, escalonador, filasArray);
-        case PASSAGEM -> Operacoes.passagem(prox, escalonador, filasArray);
+        case CHEGADA -> Operacoes.chegada(prox, filasArray);
+        case SAIDA -> Operacoes.saida(prox, filasArray);
+        case PASSAGEM -> Operacoes.passagem(prox, filasArray);
       }
     }
 
@@ -83,12 +85,21 @@ public class Main {
 
     filas.forEach((id, fila) -> {
       System.out.println("=".repeat(50));
-      System.out.println("Fila: " + id + " (G/G/" + fila.getConfig().getServidores() + "/" + fila.getConfig().getCapacidade() + ")");
+      System.out.print("Fila: " + id + " (G/G/" + fila.getConfig().getServidores());
+      System.out.print(fila.getConfig().getCapacidade() != null ? "/" : "");
+      System.out.println(Objects.requireNonNullElse(fila.getConfig().getCapacidade(), "") + ")");
       System.out.println("Chegadas: " + fila.getConfig().getMinChegada() + "..." + fila.getConfig().getMaxChegada());
       System.out.println("Atendimento: " + fila.getConfig().getMinServico() + "..." + fila.getConfig().getMaxServico());
       System.out.print(Tempo.temposToString(id));
       System.out.println("=".repeat(50));
       System.out.println("Perda: " + fila.getPerda() + " clientes");
+      System.out.println("=".repeat(50));
+      System.out.println("População: " + Calculos.calcularPopulacao(fila));
+      System.out.println("=".repeat(50));
+      System.out.println("Taxa de Atendimento por Hora (µ): " + Calculos.calcularTaxaDeAtendimentoPorHora(fila));
+      System.out.println("=".repeat(50));
+      System.out.println("Utilização: " + Calculos.calcularUtilizacao(fila));
+//      System.out.println("=".repeat(50));
     });
 
     System.out.println("=".repeat(50));

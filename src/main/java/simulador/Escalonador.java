@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class Escalonador {
-  private TreeMap<Double, Evento> eventosNaoOcorridos = new TreeMap<>();
-  private ArrayList<Evento> eventosJaOcorridos = new ArrayList<>();
+  private static TreeMap<Double, Evento> eventosNaoOcorridos = new TreeMap<>();
+  private static ArrayList<Evento> eventosJaOcorridos = new ArrayList<>();
 
-  public void addEvento(Evento evento, double tempo) {
+  public static void addEvento(Evento evento, double tempo) {
     eventosNaoOcorridos.put(tempo, evento);
   }
 
-  public boolean hasNext() {
+  public static boolean hasNext() {
     return !eventosNaoOcorridos.isEmpty();
   }
 
-  public Evento getProximoEvento() {
+  public static Evento getProximoEvento() {
     if (!hasNext()) {
       return null;
     }
@@ -28,8 +28,7 @@ public class Escalonador {
     return evento;
   }
 
-  @Override
-  public String toString() {
+  public static String toStaticString() {
     return "simulador.Escalonador{" + "\n\teventosNaoOcorridos=" + eventosNaoOcorridos + ",\n\teventosJaOcorridos=" + eventosJaOcorridos + "\n}";
   }
 }

@@ -16,6 +16,14 @@ public class Tempo {
     return decimalFormat.format(tempoAcumulado);
   }
 
+  public static double getTempoAcumulado() {
+    return tempoAcumulado;
+  }
+
+  public static Map<String, ArrayList<Double>> getTempoDasFilas() {
+    return tempoDasFilas;
+  }
+
   public static double acumulaTempo(String idFila, double tempo, ArrayList<Fila> filas) {
     double novoTempoAcumulado = tempoAcumulado;
 
