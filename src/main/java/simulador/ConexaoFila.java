@@ -1,6 +1,6 @@
 package simulador;
 
-public class ConexaoFila {
+public class ConexaoFila implements Comparable<ConexaoFila> {
   private double probabilidade;
   private Fila destino;
 
@@ -15,5 +15,10 @@ public class ConexaoFila {
 
   public Fila getDestino() {
     return destino;
+  }
+
+  @Override
+  public int compareTo(ConexaoFila other) {
+    return Double.compare(this.probabilidade, other.probabilidade);
   }
 }

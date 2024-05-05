@@ -3,7 +3,9 @@ package simulador;
 import config.FilaConfig;
 import geradorNumeros.GeradorNumeros;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class Fila {
 
@@ -15,7 +17,7 @@ public class Fila {
 
   private int perda = 0;
 
-  private TreeMap<Double, ConexaoFila> conexoes = new TreeMap<>();
+  private ArrayList<ConexaoFila> conexoes = new ArrayList<>();
 
   public Fila(String id, FilaConfig config) {
     if (config.getCapacidade() != null && config.getCapacidade() <= 0) {
@@ -31,14 +33,15 @@ public class Fila {
   }
 
   public void addConexaoFila(Fila fila, double probabilidade) {
-    conexoes.put(probabilidade, new ConexaoFila(fila, probabilidade));
+    conexoes.add(new ConexaoFila(fila, probabilidade));
+    conexoes = conexoes.stream().sorted().collect(Collectors.toCollection(ArrayList::new));
   }
 
   public Fila getConexaoAleatoria() {
     double rand = GeradorNumeros.nextRandomNormalized(0, 1);
     double soma = 0.0;
 
-    for (ConexaoFila conexao : conexoes.values()) {
+    for (ConexaoFila conexao : conexoes) {
       soma += conexao.getProbabilidade();
 
       if (rand < soma) {
@@ -52,7 +55,7 @@ public class Fila {
     return id;
   }
 
-  public TreeMap<Double, ConexaoFila> getConexoes() {
+  public ArrayList<ConexaoFila> getConexoes() {
     return conexoes;
   }
 

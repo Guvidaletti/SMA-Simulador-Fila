@@ -1,0 +1,40 @@
+numeros: 100000
+
+sementes:
+  - 123456
+
+chegadas:
+  TOTEM: 1.0
+
+filas:
+  TOTEM:
+    servidores: 2
+    capacidade: 10
+    minChegada: 2.0
+    maxChegada: 4.0
+    minServico: 0.5
+    maxServico: 2.0
+  ACADEMICO:
+    servidores: 3
+    capacidade: 15
+    minServico: 5.0
+    maxServico: 15.0
+  FINANCEIRO:
+    servidores: 3
+    capacidade: 15
+    minServico: 10.0
+    maxServico: 15.0
+
+rede:
+  -  origem: TOTEM
+     destino: ACADEMICO
+     probabilidade: 0.5
+  -  origem: TOTEM
+     destino: FINANCEIRO
+     probabilidade: 0.4
+  -  origem: ACADEMICO
+     destino: TOTEM
+     probabilidade: 0.2
+  -  origem: FINANCEIRO
+     destino: TOTEM
+     probabilidade: 0.3

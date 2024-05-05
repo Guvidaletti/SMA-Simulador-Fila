@@ -22,11 +22,14 @@ import simulador.Escalonador;
 import simulador.Fila;
 import simulador.Tempo;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
 public class Main {
+
+  private static final DecimalFormat decimalFormat = new DecimalFormat(" 0.####");
 
   public static void main(String[] args) {
     System.out.println("=".repeat(50));
@@ -85,6 +88,8 @@ public class Main {
 
     filas.forEach((id, fila) -> {
       System.out.println("=".repeat(50));
+      System.out.println("\n");
+      System.out.println("=".repeat(50));
       System.out.print("Fila: " + id + " (G/G/" + fila.getConfig().getServidores());
       System.out.print(fila.getConfig().getCapacidade() != null ? "/" : "");
       System.out.println(Objects.requireNonNullElse(fila.getConfig().getCapacidade(), "") + ")");
@@ -94,14 +99,19 @@ public class Main {
       System.out.println("=".repeat(50));
       System.out.println("Perda: " + fila.getPerda() + " clientes");
       System.out.println("=".repeat(50));
-      System.out.println("População: " + Calculos.calcularPopulacao(fila));
+      System.out.println("População: " + decimalFormat.format(Calculos.calcularPopulacao(fila)));
       System.out.println("=".repeat(50));
-      System.out.println("Taxa de Atendimento por Hora (µ): " + Calculos.calcularTaxaDeAtendimentoPorHora(fila));
+      System.out.println("Vazão: " + decimalFormat.format(Calculos.calcularVazao(fila)));
       System.out.println("=".repeat(50));
-      System.out.println("Utilização: " + Calculos.calcularUtilizacao(fila));
-//      System.out.println("=".repeat(50));
+      System.out.println("Taxa de Atendimento por Hora (µ): " + decimalFormat.format(Calculos.calcularTaxaDeAtendimentoPorHora(fila)));
+      System.out.println("=".repeat(50));
+      System.out.println("Utilização: " + decimalFormat.format(Calculos.calcularUtilizacao(fila)));
+      System.out.println("=".repeat(50));
+      System.out.println("Tempo de Resposta: " + decimalFormat.format(Calculos.calcularTempoDeResposta(fila)));
     });
 
+    System.out.println("=".repeat(50));
+    System.out.println("\n");
     System.out.println("=".repeat(50));
     System.out.println("Tempo total de simulação: " + Tempo.getTempoAcumuladoToString());
     System.out.println("=".repeat(50));
